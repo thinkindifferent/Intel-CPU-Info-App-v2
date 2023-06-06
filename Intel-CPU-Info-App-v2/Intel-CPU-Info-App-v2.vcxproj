@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CPUAnalyzer.cpp" />
     <ClCompile Include="CPUReader.cpp" />
     <ClCompile Include="Intel-CPU-Info-App-v2.cpp" />
   </ItemGroup>

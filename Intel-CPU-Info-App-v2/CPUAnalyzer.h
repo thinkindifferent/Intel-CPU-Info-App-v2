@@ -9,8 +9,10 @@ using namespace std;
 
 class CPUAnalyzer {
 private:
-	
+	CPUInfo currCPU;
 public:
+	CPUAnalyzer(CPUInfo cpu);
+
 	// Utilizes the below functions to extract CPU info
 	void extractInfo(CPUInfo cpu);
 

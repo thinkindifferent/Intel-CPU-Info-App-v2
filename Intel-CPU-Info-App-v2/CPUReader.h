@@ -4,6 +4,7 @@
 #include <iostream>
 #include <set>
 #include "CPUInfo.h"
+
 using namespace std;
 
 class CPUReader {

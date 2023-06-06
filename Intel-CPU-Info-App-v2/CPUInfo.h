@@ -3,6 +3,8 @@
 #include <string>
 
 using namespace std;
+
+// Basic struct to house several CPU properties
 struct CPUInfo {
 	string name;
 	string suffix;

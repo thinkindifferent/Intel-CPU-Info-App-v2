@@ -17,6 +17,7 @@ void CPUReader::readCPU() {
 	cin >> CPUName;
 }
 
+// Verifies if a CPU is valid
 bool CPUReader::verifyCPU() {
 	set<string>::iterator cpuPos = CPUSet.find(CPUName);
 	return cpuPos != CPUSet.end();

@@ -37,6 +37,7 @@ void loadCPUList() {
 
 int main()
 {
+	// Read in CPU data
 	cout << "Loading CPU Database..." << endl;
 	loadCPUList();
 	CPUReader cpu(CPUSet);

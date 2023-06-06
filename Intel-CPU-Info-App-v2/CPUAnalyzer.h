@@ -3,12 +3,13 @@
 
 #include <iostream>
 #include <string>
+#include "CPUInfo.h"
 
 using namespace std;
 
 class CPUAnalyzer {
 private:
-
+	
 public:
 	// Utilizes the below functions to extract CPU info
 	void extractInfo(CPUInfo cpu);

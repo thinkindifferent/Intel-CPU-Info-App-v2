@@ -43,7 +43,7 @@ int main()
 	CPUReader cpu(CPUSet);
 
 	cout << "Enter an Intel Desktop CPU Name in the following format" << endl;
-	cout << "\"Intel Core i7-6700K\"" << endl;
+	cout << "\"i7-6700K\"" << endl;
 	cpu.readCPU();
 	cout << "Valid CPU: " << cpu.verifyCPU();
 	

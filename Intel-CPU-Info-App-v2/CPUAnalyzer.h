@@ -11,7 +11,11 @@ class CPUAnalyzer {
 private:
 	CPUInfo currCPU;
 public:
+	CPUAnalyzer();
+
 	CPUAnalyzer(CPUInfo cpu);
+
+	~CPUAnalyzer();
 
 	// Utilizes the below functions to extract CPU info
 	void extractInfo(CPUInfo cpu);

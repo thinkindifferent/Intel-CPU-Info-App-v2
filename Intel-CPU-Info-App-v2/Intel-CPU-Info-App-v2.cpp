@@ -6,53 +6,31 @@
 #include <fstream>
 #include <sstream>
 #include "CPUReader.h"
+#include "CPUAnalyzer.h"
 
 using namespace std;
-
-set<string> CPUSet;
-
-void loadCPUList() {
-	// Source: https://java2blog.com/read-csv-file-in-cpp/
-
-	string temp, line, currName;
-	// Open the CPU list CSV
-	fstream cpuList;
-	cpuList.open("C:/Users/willi/OneDrive - UW/Third Year/Intel CPU Info App v2/CompatibleCPUs.csv", ios::in);
-
-	if (cpuList.is_open()) {
-		while (getline(cpuList, line)) {
-		
-			stringstream s(line);
-
-			while (getline(s, currName, ',')) {
-				CPUSet.insert(currName);
-			}
-		}
-	}
-	else {
-		cout << "\"CompatibleCPUs.csv\" not found" << endl;
-	}
-
-}
 
 int main()
 {
 	// Read in CPU data
 	cout << "Loading CPU Database..." << endl;
-	loadCPUList();
-	CPUReader cpu(CPUSet);
+	CPUReader nonAnalyzedCPU(true);
 
+	// Prompt user to enter a CPU name
 	cout << "Enter an Intel Desktop CPU Name in the following format" << endl;
 	cout << "\"i7-6700K\"" << endl;
-	cpu.readCPU();
-	cout << "Valid CPU: " << cpu.verifyCPU();
+
+	// Read and verify the CPU
+	nonAnalyzedCPU.readCPU();
+	nonAnalyzedCPU.verifyCPU();
+	cout << "Valid CPU: " << nonAnalyzedCPU.isGoodCPU() << endl;
+
+	// TODO: TESTING
+	CPUAnalyzer analyzedCPU(nonAnalyzedCPU.getCPUName());
+	
+	cout << "CPU Suffix: " << analyzedCPU.findSuffix() << endl;
 	
 
-	//for (set<string>::iterator itr = CPUSet.begin(); itr != CPUSet.end(); itr++) {
-	//	cout << *itr << endl;
-	//}
-
-	CPUSet.clear();
 	return 0;
 }
 

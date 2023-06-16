@@ -9,19 +9,18 @@ using namespace std;
 
 class CPUAnalyzer {
 private:
-	CPUInfo currCPU;
+	CPUInfo* currCPU = new CPUInfo;
+
 public:
-	CPUAnalyzer();
+	CPUAnalyzer(const CPUInfo& cpu);
 
-	CPUAnalyzer(CPUInfo cpu);
-
-	~CPUAnalyzer();
+	CPUAnalyzer(string name);
 
 	// Utilizes the below functions to extract CPU info
 	void extractInfo(CPUInfo cpu);
 
 	// Finds CPU Name (e.g. "i7-6700K")
-	void findName();
+	//void findName();
 
 	// Finds any applicable suffixes (e.g. "KS" for unlocked special edition)
 	void findSuffix();
@@ -55,5 +54,7 @@ public:
 
 	// Determines whether or not the CPU supports hyperthreading
 	void findHasSMT();
+
+	void printResults();
 };
 #endif //INTEL_CPU_APP_V2_ANALYZER_H

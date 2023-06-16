@@ -22,30 +22,29 @@
 
 CPUAnalyzer::CPUAnalyzer(const CPUInfo& cpu) {
 	CPUInfo newCPU = cpu;
-	currCPU = &newCPU;
+	this->cpu = &newCPU;
 }
 
 CPUAnalyzer::CPUAnalyzer(string name) {
-	CPUInfo cpu;
-	cpu.name = name;
+	cpu->name = name;
 }
 
 void CPUAnalyzer::findSuffix() {
 	char lastChar, secLastChar;
 	bool lastCharIsDig, secLastCharIsDig;
-	lastChar = currCPU->name.back();
-	secLastChar = currCPU->name[currCPU->name.length() - 2];
+	lastChar = cpu->name.back();
+	secLastChar = cpu->name[cpu->name.length() - 2];
 
 	lastCharIsDig = isdigit(lastChar);
 	secLastCharIsDig = isdigit(secLastChar);
 
 	// Case where there is no suffix
 	if (lastCharIsDig && secLastCharIsDig) {
-		currCPU->suffix = "N/A";
+		cpu->suffix = "N/A";
 	}
 	// Case where there is a suffix of only 1 character
 	else if (!lastCharIsDig && secLastCharIsDig) {
-		currCPU->suffix = string(1, lastChar);
+		cpu->suffix = string(1, lastChar);
 	}
 	// Case where there is a suffix of 2 characters
 	// Source: https://stackoverflow.com/questions/51017979/joining-two-characters-in-c
@@ -53,7 +52,11 @@ void CPUAnalyzer::findSuffix() {
 		string temp;
 		temp += secLastChar;
 		temp += lastChar;
-		currCPU->suffix = temp;
+		cpu->suffix = temp;
 	}
+}
+
+string CPUAnalyzer::getSuffix() const {
+	return cpu->suffix;
 }
 #endif //INTEL_CPU_APP_V2_ANALYZER_CPP

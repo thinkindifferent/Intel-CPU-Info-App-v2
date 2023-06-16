@@ -20,6 +20,7 @@ int main()
 	cout << "Enter an Intel Desktop CPU Name in the following format" << endl;
 	cout << "\"i7-6700K\"" << endl;
 
+	// TODO: Invalid CPUs will get through to the CPUAnalyzer object
 	// Read and verify the CPU
 	nonAnalyzedCPU.readCPU();
 	nonAnalyzedCPU.verifyCPU();
@@ -27,8 +28,9 @@ int main()
 
 	// TODO: TESTING
 	CPUAnalyzer analyzedCPU(nonAnalyzedCPU.getCPUName());
-	
-	cout << "CPU Suffix: " << analyzedCPU.findSuffix() << endl;
+	analyzedCPU.findSuffix();
+
+	cout << "CPU Suffix: " << analyzedCPU.getSuffix() << endl;
 	
 
 	return 0;

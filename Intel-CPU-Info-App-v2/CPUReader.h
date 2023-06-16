@@ -2,7 +2,7 @@
 #define INTEL_CPU_APP_V2_READER_H
 #include <string>
 #include <set>
-#include "CPUInfo.h"
+
 
 using namespace std;
 

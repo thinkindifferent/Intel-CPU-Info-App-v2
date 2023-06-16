@@ -3,58 +3,138 @@
 
 #include <iostream>
 #include <string>
-#include "CPUInfo.h"
+
 
 using namespace std;
 
 class CPUAnalyzer {
 private:
-	CPUInfo* currCPU = new CPUInfo;
+	struct CPUInfo {
+		string name;
+		string suffix;
+		string family;
+		string memSupport;
+		string arch;
+		string socket;
+		string tier;
+		int number;
+		int generation;
+		int lithography;
+		bool hasIGPU;
+		bool hasSMT;
+	};
+
+	CPUInfo* cpu = new CPUInfo;
 
 public:
+
+	/*
+		Copy constructor to make a new, analyzed CPU
+	*/
 	CPUAnalyzer(const CPUInfo& cpu);
 
+	/*
+		Constructor to initialize analyzing a CPU with a given name
+	*/
 	CPUAnalyzer(string name);
 
-	// Utilizes the below functions to extract CPU info
+	
 	void extractInfo(CPUInfo cpu);
 
 	// Finds CPU Name (e.g. "i7-6700K")
 	//void findName();
 
-	// Finds any applicable suffixes (e.g. "KS" for unlocked special edition)
+	/*
+		Finds any applicable suffixes (e.g. "KS" for unlocked special edition)
+	*/
 	void findSuffix();
 
-	// Finds the CPU family (e.g. i3, i5...)
+	/*
+		Finds the CPU family (e.g. i3, i5...)
+	*/
 	void findFamily();
 
-	// Finds the type of RAM supported
+	/*
+		Finds the type of RAM supported
+	*/
 	void findMemSupport();
 
-	// Finds the CPU architecture codename
+	/*
+		Finds the CPU architecture codename
+	*/
 	void findArch();
 
-	// Finds the socket the CPU uses
+	/*
+		Finds the socket the CPU uses
+	*/
 	void findSocket();
 
-	// Determines the performance tier or target audience
+	/*
+		Determines the performance tier or target audience
+	*/
 	void findTier();
 
-	// Extracts the numeric values inside the CPU name
+	/*
+		Extracts the numeric values inside the CPU name
+	*/
 	void findNumber();
 
-	// Determines generation (2nd to 13th)
+	/*
+		Determines generation (2nd to 13th)
+	*/
 	void findGeneration();
 
-	// Finds the lithography of the CPU
+	/*
+		Finds the lithography of the CPU
+	*/
 	void findLithogrpahy();
 
-	// Determines whether or not the CPU has an iGPU
+	/*
+		Determines whether or not the CPU has an iGPU
+	*/
 	void findHasIGPU();
 
-	// Determines whether or not the CPU supports hyperthreading
+	/*
+		Determines whether or not the CPU supports hyperthreading
+	*/
 	void findHasSMT();
 
+	/*
+		Prints the results of the analysis
+	*/
 	void printResults();
+
+	// Accessor for the CPU suffix
+	string getSuffix() const;
+
+	// Accessor for the CPU family
+	string getFamily() const;
+
+	// Accessor for the CPU's supported memory
+	string getMemSupport() const;
+
+	// Accessor for the CPU architecture
+	string getArch() const;
+
+	// Accessor for the CPU socket
+	string getSocket() const;
+
+	// Accessor for the CPU's performance tier
+	string getTier() const;
+
+	// Accessor for the CPU number
+	int getNumber() const;
+
+	// Accessor for the CPU's generation
+	int getGeneration() const;
+
+	// Accessor for the CPU's lithography process
+	int getLithography() const;
+
+	// Accessor for whether the CPU has an iGPU
+	bool getHasIGPU() const;
+
+	// Accessor for whether the CPU has hyperthreading
+	bool getHasSMT() const;
 };
 #endif //INTEL_CPU_APP_V2_ANALYZER_H

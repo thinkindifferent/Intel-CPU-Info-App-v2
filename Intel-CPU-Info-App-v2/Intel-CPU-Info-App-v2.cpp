@@ -26,12 +26,21 @@ int main()
 	nonAnalyzedCPU.verifyCPU();
 	cout << "Valid CPU: " << nonAnalyzedCPU.isGoodCPU() << endl;
 
-	// TODO: TESTING
+	/*
+		TESTING AREA! ONLY FOR DIAGNOSING INDIVIDUAL FUNCTIONS
+	*/
 	CPUAnalyzer analyzedCPU(nonAnalyzedCPU.getCPUName());
 	analyzedCPU.findSuffix();
+	analyzedCPU.findFamily();
+	analyzedCPU.findTier();
+	analyzedCPU.findNumber();
+	analyzedCPU.findGeneration();
 
 	cout << "CPU Suffix: " << analyzedCPU.getSuffix() << endl;
-	
+	cout << "CPU Family: " << analyzedCPU.getFamily() << endl;
+	cout << "CPU Tier: " << analyzedCPU.getTier() << endl;
+	cout << "CPU Number: " << analyzedCPU.getNumber() << endl;
+	cout << "CPU Generation: " << analyzedCPU.getGeneration() << endl;
 
 	return 0;
 }

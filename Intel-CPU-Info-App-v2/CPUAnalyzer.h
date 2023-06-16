@@ -25,13 +25,16 @@ private:
 	};
 
 	CPUInfo* cpu = new CPUInfo;
+	short suffixSize;
+	bool suffixIsFound;
+	bool numIsFound;
 
 public:
 
 	/*
 		Copy constructor to make a new, analyzed CPU
 	*/
-	CPUAnalyzer(const CPUInfo& cpu);
+	CPUAnalyzer(const CPUAnalyzer& oldCPU);
 
 	/*
 		Constructor to initialize analyzing a CPU with a given name
@@ -70,12 +73,14 @@ public:
 	void findSocket();
 
 	/*
-		Determines the performance tier or target audience
+		Determines the performance tier or target audience, relies on the result
+		produced by findFamily()
 	*/
 	void findTier();
 
 	/*
-		Extracts the numeric values inside the CPU name
+		Extracts the numeric values inside the CPU name, relies on the result
+		produced by findSuffix() to get the number
 	*/
 	void findNumber();
 

@@ -17,10 +17,12 @@ private:
 		string arch;
 		string socket;
 		string tier;
+		string suffixProp;
 		int number;
 		int generation;
 		int lithography;
 		int cores[2];
+		int threads;
 		bool hasIGPU;
 		bool hasSMT;
 		bool hasPECores;
@@ -103,6 +105,11 @@ public:
 	void findCores();
 
 	/*
+		Finds the number of threads the CPU would have
+	*/
+	void findThreads();
+
+	/*
 		Determines whether or not the CPU has an iGPU
 	*/
 	void findHasIGPU();
@@ -116,6 +123,11 @@ public:
 		Determines whether or not the CPU has P or E cores
 	*/
 	void findHasPECores();
+
+	/*
+		Determines the special properties that a CPU's suffix would have
+	*/
+	void findSuffixProperties();
 
 	/*
 		Prints the results of the analysis
@@ -152,6 +164,9 @@ public:
 	// Accessor for the core count
 	int* getCores() const;
 
+	// Accessor for the thread count
+	int getThreads() const;
+
 	// Accessor for whether the CPU has an iGPU
 	bool getHasIGPU() const;
 
@@ -160,5 +175,8 @@ public:
 
 	// Accessor for whether there are P and E cores
 	bool getHasPECores() const;
+
+	// Accessor for CPU suffix properties
+	string getSuffixProperties() const;
 };
 #endif //INTEL_CPU_APP_V2_ANALYZER_H

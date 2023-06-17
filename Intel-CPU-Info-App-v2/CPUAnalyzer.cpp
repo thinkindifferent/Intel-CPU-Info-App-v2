@@ -364,6 +364,10 @@ void CPUAnalyzer::findHasSMT() {
 	}
 }
 
+void CPUAnalyzer::findHasPECores() {
+	cpu->hasPECores = (cpu->generation >= 12);
+}
+
 string CPUAnalyzer::getSuffix() const {
 	return cpu->suffix;
 }
@@ -410,5 +414,9 @@ bool CPUAnalyzer::getHasIGPU() const {
 
 bool CPUAnalyzer::getHasSMT() const {
 	return cpu->hasSMT;
+}
+
+bool CPUAnalyzer::getHasPECores() const {
+	return cpu->hasPECores;
 }
 #endif //INTEL_CPU_APP_V2_ANALYZER_CPP

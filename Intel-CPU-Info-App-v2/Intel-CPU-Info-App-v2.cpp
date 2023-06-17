@@ -20,7 +20,8 @@ int main()
 	cout << "Enter an Intel Desktop CPU Name in the following format" << endl;
 	cout << "\"i7-6700K\"" << endl;
 
-	// TODO: Invalid CPUs will get through to the CPUAnalyzer object
+	// TODO: Invalid CPUs will get through to the CPUAnalyzer object, fix it
+	//
 	// Read and verify the CPU
 	nonAnalyzedCPU.readCPU();
 	nonAnalyzedCPU.verifyCPU();
@@ -35,12 +36,23 @@ int main()
 	analyzedCPU.findTier();
 	analyzedCPU.findNumber();
 	analyzedCPU.findGeneration();
+	analyzedCPU.findLithogrpahy();
+	analyzedCPU.findMemSupport();
+	analyzedCPU.findArch();
+	analyzedCPU.findSocket();
+	analyzedCPU.findHasIGPU();
 
 	cout << "CPU Suffix: " << analyzedCPU.getSuffix() << endl;
 	cout << "CPU Family: " << analyzedCPU.getFamily() << endl;
 	cout << "CPU Tier: " << analyzedCPU.getTier() << endl;
 	cout << "CPU Number: " << analyzedCPU.getNumber() << endl;
 	cout << "CPU Generation: " << analyzedCPU.getGeneration() << endl;
+	cout << "CPU Lithography: " << analyzedCPU.getLithography() << "nm" << endl;
+	cout << "CPU Supported Memory: " << analyzedCPU.getMemSupport() << endl;
+	cout << "CPU Architecture: " << analyzedCPU.getArch() << endl;
+	cout << "CPU Socket: " << analyzedCPU.getSocket() << endl;
+	cout << "Has iGPU? " << analyzedCPU.getHasIGPU() << endl;
+
 
 	return 0;
 }

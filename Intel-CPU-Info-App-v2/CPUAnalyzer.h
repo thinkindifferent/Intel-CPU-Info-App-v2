@@ -28,6 +28,7 @@ private:
 	short suffixSize;
 	bool suffixIsFound;
 	bool numIsFound;
+	bool genIsFound;
 
 public:
 

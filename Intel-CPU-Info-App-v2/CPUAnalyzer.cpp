@@ -89,6 +89,144 @@ void CPUAnalyzer::findGeneration() {
 
 	// Divide the CPU number by 1000 to isolate the first two digits
 	cpu->generation = cpu->number / 1000;
+	genIsFound = true;
+}
+
+void CPUAnalyzer::findLithogrpahy() {
+	if (!genIsFound) {
+		findGeneration();
+	}
+	
+	int gen = cpu->generation;
+	if (gen == 2) {
+		cpu->lithography = 32;
+	}
+	else if ((gen == 3) || (gen == 4)) {
+		cpu->lithography = 22;
+	}
+	else if ((gen > 4) && (gen < 12)) {
+		cpu->lithography = 14;
+	}
+	else {
+		cpu->lithography = 10;
+	}
+}
+
+void CPUAnalyzer::findMemSupport() {
+	if (!genIsFound) {
+		findGeneration();
+	}
+
+	int gen = cpu->generation;
+	if (gen < 6) {
+		cpu->memSupport = "DDR3";
+	}
+	else if ((gen >= 6) && (gen <= 11)) {
+		cpu->memSupport = "DDR4";
+	}
+	else {
+		cpu->memSupport = "DDR4/DDR5";
+	}
+}
+
+void CPUAnalyzer::findArch() {
+	if (!genIsFound) {
+		findGeneration();
+	}
+
+	switch (cpu->generation) {
+		case 2:
+			cpu->arch = "Sandy Bridge";
+			break;
+		case 3:
+			cpu->arch = "Ivy Bridge";
+			break;
+		case 4:
+			cpu->arch = "Haswell/Devil's Canyon";
+			break;
+		case 5:
+			cpu->arch = "Broadwell";
+			break;
+		case 6:
+			cpu->arch = "Skylake";
+			break;
+		case 7:
+			cpu->arch = "Kaby Lake";
+			break;
+		case 8:
+			cpu->arch = "Coffee Lake";
+			break;
+		case 9:
+			cpu->arch = "Coffee Lake Refresh";
+			break;
+		case 10:
+			cpu->arch = "Comet Lake";
+			break;
+		case 11:
+			cpu->arch = "Rocket Lake";
+			break;
+		case 12:
+			cpu->arch = "Alder Lake";
+			break;
+		case 13:
+			cpu->arch = "Raptor Lake";
+			break;
+		default:
+			cpu->arch = "N/A";
+			break;
+	}
+}
+
+void CPUAnalyzer::findSocket() {
+	if (!genIsFound) {
+		findGeneration();
+	}
+
+	if (cpu->generation < 4) {
+		cpu->socket = "LGA1155";
+	}
+	else if ((cpu->generation == 4) || (cpu->generation == 5)) {
+		cpu->socket = "LGA1150";
+	}
+	else if ((cpu->generation > 5) && (cpu->generation < 10)) {
+		cpu->socket = "LGA1151";
+	}
+	else if ((cpu->generation == 10) || (cpu->generation == 11)) {
+		cpu->socket = "LGA1200";
+	}
+	else {
+		cpu->socket = "LGA1700";
+	}
+}
+
+void CPUAnalyzer::findHasIGPU() {
+	if (!suffixIsFound) {
+		findSuffix();
+	}
+
+	int suffixLength = cpu->suffix.length();
+	if (suffixLength == 2) {
+		if ((cpu->suffix.at(1) == 'F') || (cpu->suffix.at(1) == 'P')) {
+			cpu->hasIGPU = false;
+		}
+		else {
+			cpu->hasIGPU = true;
+		}
+	}
+	else if (suffixLength == 1) {
+		if ((cpu->suffix.at(0) == 'F') || (cpu->suffix.at(0) == 'P')) {
+			cpu->hasIGPU = false;
+		}
+		else {
+			cpu->hasIGPU = true;
+		}
+	}
+
+	// TODO: K CPU's don't seem to be caught in this else case
+	// Fixed above***
+	else {
+		cpu->hasIGPU = true;
+	}
 }
 
 string CPUAnalyzer::getSuffix() const {
@@ -109,5 +247,25 @@ int CPUAnalyzer::getNumber() const {
 
 int CPUAnalyzer::getGeneration() const {
 	return cpu->generation;
+}
+
+int CPUAnalyzer::getLithography() const {
+	return cpu->lithography;
+}
+
+string CPUAnalyzer::getMemSupport() const {
+	return cpu->memSupport;
+}
+
+string CPUAnalyzer::getArch() const {
+	return cpu->arch;
+}
+
+string CPUAnalyzer::getSocket() const {
+	return cpu->socket;
+}
+
+bool CPUAnalyzer::getHasIGPU() const {
+	return cpu->hasIGPU;
 }
 #endif //INTEL_CPU_APP_V2_ANALYZER_CPP

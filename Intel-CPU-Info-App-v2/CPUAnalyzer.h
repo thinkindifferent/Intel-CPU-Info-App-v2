@@ -20,7 +20,7 @@ private:
 		int number;
 		int generation;
 		int lithography;
-		int cores;
+		int cores[2];
 		bool hasIGPU;
 		bool hasSMT;
 		bool hasPECores;
@@ -150,7 +150,7 @@ public:
 	int getLithography() const;
 
 	// Accessor for the core count
-	int getCores() const;
+	int* getCores() const;
 
 	// Accessor for whether the CPU has an iGPU
 	bool getHasIGPU() const;

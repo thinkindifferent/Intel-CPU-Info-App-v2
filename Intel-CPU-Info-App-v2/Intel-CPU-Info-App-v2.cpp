@@ -42,6 +42,7 @@ int main()
 	analyzedCPU.findSocket();
 	analyzedCPU.findHasIGPU();
 	analyzedCPU.findHasSMT();
+	analyzedCPU.findCores();
 
 	cout << "CPU Suffix: " << analyzedCPU.getSuffix() << endl;
 	cout << "CPU Family: " << analyzedCPU.getFamily() << endl;
@@ -54,6 +55,7 @@ int main()
 	cout << "CPU Socket: " << analyzedCPU.getSocket() << endl;
 	cout << "Has iGPU? " << analyzedCPU.getHasIGPU() << endl;
 	cout << "Has hyperthreading? " << analyzedCPU.getHasSMT() << endl;
+	cout << "CPU P/E Cores: " << analyzedCPU.getCores()[0] << " P Cores, " << analyzedCPU.getCores()[1] << " E Cores" << endl;
 
 
 	return 0;

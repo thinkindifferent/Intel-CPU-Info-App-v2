@@ -119,13 +119,111 @@ void CPUAnalyzer::findCores() {
 		findFamily();
 	}
 
-	if (((cpu->family == "i7") || (cpu->family == "i5")) && (cpu->generation < 8)) {
-		cpu->cores = 4;
-	}
-	else if ((cpu->family == "i3") && (cpu->generation < 8)) {
-		cpu->cores = 2;
+	// The cpu->cores member would be an array of 2, P cores in index 0
+	// and E cores in index 1
+	if (cpu->generation < 12) {
+		cpu->cores[1] = 0;
 	}
 
+	if (cpu->generation < 8) {
+		if ((cpu->family == "i7") || (cpu->family == "i5")) {
+			cpu->cores[0] = 4;
+		}
+		else if (cpu->family == "i3") {
+			cpu->cores[0] = 2;
+		}
+		return;
+	}
+	
+	switch (cpu->generation) {
+		case 8:
+			if ((cpu->family == "i7") || (cpu->family == "i5")) {
+				cpu->cores[0] = 6;
+			}
+			else if (cpu->family == "i3") {
+				cpu->cores[0] = 4;
+			}
+			break;
+		case 9:
+			if ((cpu->family == "i9") || (cpu->family == "i7")) {
+				cpu->cores[0] = 8;
+			}
+			else if (cpu->family == "i5") {
+				cpu->cores[0] = 6;
+			}
+			else if (cpu->family == "i3") {
+				cpu->cores[0] = 4;
+			}
+			break;
+		case 10:
+			if (cpu->family == "i9") {
+				cpu->cores[0] = 10;
+			}
+			else if (cpu->family == "i7") {
+				cpu->cores[0] = 8;
+			}
+			else if (cpu->family == "i5") {
+				cpu->cores[0] = 6;
+			}
+			else if (cpu->family == "i3") {
+				cpu->cores[0] = 4;
+			}
+			break;
+		case 11:
+			if ((cpu->family == "i9") || (cpu->family == "i7")) {
+				cpu->cores[0] = 8;
+			}
+			else if (cpu->family == "i5") {
+				cpu->cores[0] = 6;
+			}
+			break;
+		case 12:
+			if (cpu->family == "i9") {
+				cpu->cores[0] = 8;
+				cpu->cores[1] = 8;
+			}
+			else if (cpu->family == "i7") {
+				cpu->cores[0] = 8;
+				cpu->cores[1] = 4;
+			}
+			else if (cpu->family == "i5") {
+				cpu->cores[0] = 6;
+				if (cpu->number == 12600) {
+					cpu->cores[1] = 4;
+				}
+				else {
+					cpu->cores[1] = 0;
+				}
+			}
+			else if (cpu->family == "i3") {
+				cpu->cores[0] = 4;
+				cpu->cores[1] = 0;
+			}
+			break;
+		case 13:
+			if (cpu->family == "i9") {
+				cpu->cores[0] = 8;
+				cpu->cores[1] = 16;
+			}
+			else if (cpu->family == "i7") {
+				cpu->cores[0] = 8;
+				cpu->cores[1] = 8;
+			}
+			else if (cpu->family == "i5") {
+				cpu->cores[0] = 6;
+				if (cpu->number >= 13500) {
+					cpu->cores[1] = 8;
+				}
+				else {
+					cpu->cores[1] = 4;
+				}
+			}
+			else if (cpu->family == "i3") {
+				cpu->cores[0] = 4;
+				cpu->cores[1] = 0;
+			}
+			break;
+	}
 	
 }
 
@@ -288,6 +386,10 @@ int CPUAnalyzer::getGeneration() const {
 
 int CPUAnalyzer::getLithography() const {
 	return cpu->lithography;
+}
+
+int* CPUAnalyzer::getCores() const {
+	return cpu->cores;
 }
 
 string CPUAnalyzer::getMemSupport() const {

@@ -44,6 +44,7 @@ void CPUAnalyzer::findSuffix() {
 
 void CPUAnalyzer::findFamily() {
 	cpu->family = cpu->name.substr(0, 2);
+	familyIsFound = true;
 }
 
 void CPUAnalyzer::findTier() {
@@ -110,6 +111,22 @@ void CPUAnalyzer::findLithogrpahy() {
 	else {
 		cpu->lithography = 10;
 	}
+}
+
+void CPUAnalyzer::findCores() {
+	if (!genIsFound || !familyIsFound) {
+		findGeneration();
+		findFamily();
+	}
+
+	if (((cpu->family == "i7") || (cpu->family == "i5")) && (cpu->generation < 8)) {
+		cpu->cores = 4;
+	}
+	else if ((cpu->family == "i3") && (cpu->generation < 8)) {
+		cpu->cores = 2;
+	}
+
+	
 }
 
 void CPUAnalyzer::findMemSupport() {
@@ -229,6 +246,26 @@ void CPUAnalyzer::findHasIGPU() {
 	}
 }
 
+void CPUAnalyzer::findHasSMT() {
+	if (!genIsFound || !familyIsFound) {
+		findGeneration();
+		findFamily();
+	}
+
+	if ((cpu->family == "i9") || (cpu->family == "i3")) {
+		cpu->hasSMT = true;
+	}
+	else if ((cpu->family == "i7") && (cpu->generation != 9)) {
+		cpu->hasSMT = true;
+	}
+	else if ((cpu->family == "i5") && (cpu->generation > 9)) {
+		cpu->hasSMT = true;
+	}
+	else {
+		cpu->hasSMT = false;
+	}
+}
+
 string CPUAnalyzer::getSuffix() const {
 	return cpu->suffix;
 }
@@ -267,5 +304,9 @@ string CPUAnalyzer::getSocket() const {
 
 bool CPUAnalyzer::getHasIGPU() const {
 	return cpu->hasIGPU;
+}
+
+bool CPUAnalyzer::getHasSMT() const {
+	return cpu->hasSMT;
 }
 #endif //INTEL_CPU_APP_V2_ANALYZER_CPP

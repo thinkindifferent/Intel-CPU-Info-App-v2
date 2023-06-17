@@ -20,8 +20,10 @@ private:
 		int number;
 		int generation;
 		int lithography;
+		int cores;
 		bool hasIGPU;
 		bool hasSMT;
+		bool hasPECores;
 	};
 
 	CPUInfo* cpu = new CPUInfo;
@@ -29,7 +31,7 @@ private:
 	bool suffixIsFound;
 	bool numIsFound;
 	bool genIsFound;
-
+	bool familyIsFound;
 public:
 
 	/*
@@ -96,6 +98,11 @@ public:
 	void findLithogrpahy();
 
 	/*
+		Finds the number of cores the CPU would have
+	*/
+	void findCores();
+
+	/*
 		Determines whether or not the CPU has an iGPU
 	*/
 	void findHasIGPU();
@@ -104,6 +111,11 @@ public:
 		Determines whether or not the CPU supports hyperthreading
 	*/
 	void findHasSMT();
+
+	/*
+		Determines whether or not the CPU has P or E cores
+	*/
+	void findHasPECores();
 
 	/*
 		Prints the results of the analysis
@@ -137,10 +149,16 @@ public:
 	// Accessor for the CPU's lithography process
 	int getLithography() const;
 
+	// Accessor for the core count
+	int getCores() const;
+
 	// Accessor for whether the CPU has an iGPU
 	bool getHasIGPU() const;
 
 	// Accessor for whether the CPU has hyperthreading
 	bool getHasSMT() const;
+
+	// Accessor for whether there are P and E cores
+	bool getHasPECores() const;
 };
 #endif //INTEL_CPU_APP_V2_ANALYZER_H

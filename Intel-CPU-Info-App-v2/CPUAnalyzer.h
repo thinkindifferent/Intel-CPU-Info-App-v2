@@ -26,6 +26,7 @@ private:
 		bool hasIGPU;
 		bool hasSMT;
 		bool hasPECores;
+		bool hasTurbo;
 	};
 
 	CPUInfo* cpu = new CPUInfo;
@@ -35,6 +36,12 @@ private:
 	bool genIsFound;
 	bool familyIsFound;
 	bool smtIsFound;
+
+	// Helper to write suffixes for numbers, e.g. 3rd, 5th, etc.
+	string writeNumericSuffix(int num);
+
+	// Helper to make a "Yes" or "No" from a bool
+	string boolToStr(bool in);
 public:
 
 	/*
@@ -50,7 +57,7 @@ public:
 	/*
 		Combines all find() methods to extract information in one call
 	*/
-	void extractInfo(CPUInfo cpu);
+	void extractInfo();
 
 	/*
 		Finds any applicable suffixes (e.g. "KS" for unlocked special edition)
@@ -130,6 +137,11 @@ public:
 	void findHasPECores();
 
 	/*
+		Determines whether or not the CPU is capable of turbo boost
+	*/
+	void findHasTurbo();
+
+	/*
 		Prints the results of the analysis
 	*/
 	void printResults();
@@ -179,5 +191,7 @@ public:
 	// Accessor for whether there are P and E cores
 	bool getHasPECores() const;
 
+	// Accessor for whether the CPU has turbo boost
+	bool getHasTurbo() const;
 };
 #endif //INTEL_CPU_APP_V2_ANALYZER_H

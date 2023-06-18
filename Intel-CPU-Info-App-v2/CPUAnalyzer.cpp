@@ -11,6 +11,49 @@ CPUAnalyzer::CPUAnalyzer(string name) {
 	cpu->name = name;
 }
 
+void CPUAnalyzer::extractInfo() {
+	findSuffix();
+	findFamily();
+	findTier();
+	findNumber();
+	findGeneration();
+	findLithogrpahy();
+	findMemSupport();
+	findArch();
+	findSocket();
+	findHasIGPU();
+	findHasSMT();
+	findHasPECores();
+	findCores();
+	findThreads();
+	findSuffixProperties();
+	findHasTurbo();
+}
+
+void CPUAnalyzer::printResults() {
+	cout << "==========Basic CPU Information=========" << endl;
+	cout << "CPU Name: " << cpu->name << endl;
+	cout << "CPU Number: " << cpu->number << endl;
+	cout << "CPU Family: Core " << cpu->family << endl;
+	cout << "Architecture: " << cpu->arch << endl;
+	cout << "Lithography: " << cpu->lithography << "nm" << endl;
+	cout << "Tier: " << cpu->tier << endl;
+	cout << "Generation: " << cpu->generation << writeNumericSuffix(cpu->generation) << endl << endl;
+
+	cout << "===========CPU Specifications===========" << endl;
+	cout << "Total Cores: " << (cpu->cores[0] + cpu->cores[1]) << endl;
+	cout << "Has P/E Cores? " << boolToStr(cpu->hasPECores) << endl;
+	cout << "Core Makeup: " << (cpu->cores[0]) << " P Cores, " << (cpu->cores[1]) << " E Cores" << endl;
+	cout << "Total Threads: " << cpu->threads << endl;
+	cout << "Has Hyperthreading? " << boolToStr(cpu->hasSMT) << endl;
+	cout << "Has iGPU? " << boolToStr(cpu->hasIGPU) << endl << endl;
+
+	cout << "=======Supporting CPU Information=======" << endl;
+	cout << "Socket Supported: " << cpu->socket << endl;
+	cout << "Memory Supported: " << cpu->memSupport << endl;
+	cout << "Special Properties: " << cpu->suffixProp << endl;
+}
+
 void CPUAnalyzer::findSuffix() {
 	char lastChar, secLastChar;
 	bool lastCharIsDig, secLastCharIsDig;
@@ -431,6 +474,15 @@ void CPUAnalyzer::findHasPECores() {
 	cpu->hasPECores = (cpu->generation >= 12);
 }
 
+void CPUAnalyzer::findHasTurbo() {
+	if (!genIsFound || !familyIsFound) {
+		findGeneration();
+		findFamily();
+	}
+
+	cpu->hasTurbo = !((cpu->family == "i3") && (cpu->generation < 9));
+}
+
 string CPUAnalyzer::getSuffix() const {
 	return cpu->suffix;
 }
@@ -489,6 +541,40 @@ bool CPUAnalyzer::getHasSMT() const {
 
 bool CPUAnalyzer::getHasPECores() const {
 	return cpu->hasPECores;
+}
+
+bool CPUAnalyzer::getHasTurbo() const {
+	return cpu->hasTurbo;
+}
+
+string CPUAnalyzer::writeNumericSuffix(int num) {
+	// Since all generations are under 20, numbers' suffixes would
+	// mostly be "th", only 1st, 2nd, and 3rd will have different suffixes
+	string ret;
+	switch (num) {
+		case 1:
+			ret = "st";
+			break;
+		case 2:
+			ret = "nd";
+			break;
+		case 3:
+			ret = "rd";
+			break;
+		default:
+			ret = "th";
+			break;
+	}
+	return ret;
+}
+
+string CPUAnalyzer::boolToStr(bool in) {
+	if (in) {
+		return "Yes";
+	}
+	else {
+		return "No";
+	}
 }
 
 #endif //INTEL_CPU_APP_V2_ANALYZER_CPP

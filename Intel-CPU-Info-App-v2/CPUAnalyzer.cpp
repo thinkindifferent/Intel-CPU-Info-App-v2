@@ -47,6 +47,93 @@ void CPUAnalyzer::findFamily() {
 	familyIsFound = true;
 }
 
+void CPUAnalyzer::findMemSupport() {
+	if (!genIsFound) {
+		findGeneration();
+	}
+
+	int gen = cpu->generation;
+	if (gen < 6) {
+		cpu->memSupport = "DDR3";
+	}
+	else if ((gen >= 6) && (gen <= 11)) {
+		cpu->memSupport = "DDR4";
+	}
+	else {
+		cpu->memSupport = "DDR4/DDR5";
+	}
+}
+
+void CPUAnalyzer::findArch() {
+	if (!genIsFound) {
+		findGeneration();
+	}
+
+	switch (cpu->generation) {
+	case 2:
+		cpu->arch = "Sandy Bridge";
+		break;
+	case 3:
+		cpu->arch = "Ivy Bridge";
+		break;
+	case 4:
+		cpu->arch = "Haswell/Devil's Canyon";
+		break;
+	case 5:
+		cpu->arch = "Broadwell";
+		break;
+	case 6:
+		cpu->arch = "Skylake";
+		break;
+	case 7:
+		cpu->arch = "Kaby Lake";
+		break;
+	case 8:
+		cpu->arch = "Coffee Lake";
+		break;
+	case 9:
+		cpu->arch = "Coffee Lake Refresh";
+		break;
+	case 10:
+		cpu->arch = "Comet Lake";
+		break;
+	case 11:
+		cpu->arch = "Rocket Lake";
+		break;
+	case 12:
+		cpu->arch = "Alder Lake";
+		break;
+	case 13:
+		cpu->arch = "Raptor Lake";
+		break;
+	default:
+		cpu->arch = "N/A";
+		break;
+	}
+}
+
+void CPUAnalyzer::findSocket() {
+	if (!genIsFound) {
+		findGeneration();
+	}
+
+	if (cpu->generation < 4) {
+		cpu->socket = "LGA1155";
+	}
+	else if ((cpu->generation == 4) || (cpu->generation == 5)) {
+		cpu->socket = "LGA1150";
+	}
+	else if ((cpu->generation > 5) && (cpu->generation < 10)) {
+		cpu->socket = "LGA1151";
+	}
+	else if ((cpu->generation == 10) || (cpu->generation == 11)) {
+		cpu->socket = "LGA1200";
+	}
+	else {
+		cpu->socket = "LGA1700";
+	}
+}
+
 void CPUAnalyzer::findTier() {
 	findFamily(); // To ensure that the family field is filled in
 	int perfLevel = int(cpu->family.at(1)) - 48; // Correct the conversion
@@ -68,6 +155,54 @@ void CPUAnalyzer::findTier() {
 			break;
 	}
 
+}
+
+void CPUAnalyzer::findSuffixProperties() {
+	if (!suffixIsFound) {
+		findSuffix();
+	}
+
+	string prop;
+	if (suffixSize == 0) {
+		prop = "N/A";
+	}
+
+	for (int i = 0; i < suffixSize; i++) {
+		char temp = cpu->suffix.at(i);
+
+		switch (temp) {
+		case 'C':
+			prop += "LGA1150 High Performance iGPU";
+			break;
+		case 'E':
+			prop += "Embedded Processor";
+			break;
+		case 'F':
+			prop += "Requires Discrete Graphics";
+			break;
+		case 'K':
+			prop += "Unlocked";
+			break;
+		case 'P':
+			prop += "Requires Discrete Graphics";
+			break;
+		case 'S':
+			prop += "Special Edition";
+			break;
+		case 'T':
+			prop += "Power-Optimized Lifestyle";
+			break;
+		default:
+			prop += "N/A";
+			break;
+		}
+
+		if ((suffixSize == 2) && (i == 0)) {
+			prop += ", ";
+		}
+	}
+
+	cpu->suffixProp = prop;
 }
 
 void CPUAnalyzer::findNumber() {
@@ -227,90 +362,16 @@ void CPUAnalyzer::findCores() {
 	
 }
 
-void CPUAnalyzer::findMemSupport() {
-	if (!genIsFound) {
-		findGeneration();
+void CPUAnalyzer::findThreads() {
+	if (!smtIsFound) {
+		findHasSMT();
 	}
 
-	int gen = cpu->generation;
-	if (gen < 6) {
-		cpu->memSupport = "DDR3";
-	}
-	else if ((gen >= 6) && (gen <= 11)) {
-		cpu->memSupport = "DDR4";
+	if (cpu->hasSMT) {
+		cpu->threads = (2 * cpu->cores[0]) + cpu->cores[1];
 	}
 	else {
-		cpu->memSupport = "DDR4/DDR5";
-	}
-}
-
-void CPUAnalyzer::findArch() {
-	if (!genIsFound) {
-		findGeneration();
-	}
-
-	switch (cpu->generation) {
-		case 2:
-			cpu->arch = "Sandy Bridge";
-			break;
-		case 3:
-			cpu->arch = "Ivy Bridge";
-			break;
-		case 4:
-			cpu->arch = "Haswell/Devil's Canyon";
-			break;
-		case 5:
-			cpu->arch = "Broadwell";
-			break;
-		case 6:
-			cpu->arch = "Skylake";
-			break;
-		case 7:
-			cpu->arch = "Kaby Lake";
-			break;
-		case 8:
-			cpu->arch = "Coffee Lake";
-			break;
-		case 9:
-			cpu->arch = "Coffee Lake Refresh";
-			break;
-		case 10:
-			cpu->arch = "Comet Lake";
-			break;
-		case 11:
-			cpu->arch = "Rocket Lake";
-			break;
-		case 12:
-			cpu->arch = "Alder Lake";
-			break;
-		case 13:
-			cpu->arch = "Raptor Lake";
-			break;
-		default:
-			cpu->arch = "N/A";
-			break;
-	}
-}
-
-void CPUAnalyzer::findSocket() {
-	if (!genIsFound) {
-		findGeneration();
-	}
-
-	if (cpu->generation < 4) {
-		cpu->socket = "LGA1155";
-	}
-	else if ((cpu->generation == 4) || (cpu->generation == 5)) {
-		cpu->socket = "LGA1150";
-	}
-	else if ((cpu->generation > 5) && (cpu->generation < 10)) {
-		cpu->socket = "LGA1151";
-	}
-	else if ((cpu->generation == 10) || (cpu->generation == 11)) {
-		cpu->socket = "LGA1200";
-	}
-	else {
-		cpu->socket = "LGA1700";
+		cpu->threads = cpu->cores[0] + cpu->cores[1];
 	}
 }
 
@@ -362,6 +423,8 @@ void CPUAnalyzer::findHasSMT() {
 	else {
 		cpu->hasSMT = false;
 	}
+	
+	smtIsFound = true;
 }
 
 void CPUAnalyzer::findHasPECores() {
@@ -376,8 +439,24 @@ string CPUAnalyzer::getFamily() const {
 	return cpu->family;
 }
 
+string CPUAnalyzer::getMemSupport() const {
+	return cpu->memSupport;
+}
+
+string CPUAnalyzer::getArch() const {
+	return cpu->arch;
+}
+
+string CPUAnalyzer::getSocket() const {
+	return cpu->socket;
+}
+
 string CPUAnalyzer::getTier() const {
 	return cpu->tier;
+}
+
+string CPUAnalyzer::getSuffixProperties() const {
+	return cpu->suffixProp;
 }
 
 int CPUAnalyzer::getNumber() const {
@@ -396,16 +475,8 @@ int* CPUAnalyzer::getCores() const {
 	return cpu->cores;
 }
 
-string CPUAnalyzer::getMemSupport() const {
-	return cpu->memSupport;
-}
-
-string CPUAnalyzer::getArch() const {
-	return cpu->arch;
-}
-
-string CPUAnalyzer::getSocket() const {
-	return cpu->socket;
+int CPUAnalyzer::getThreads() const {
+	return cpu->threads;
 }
 
 bool CPUAnalyzer::getHasIGPU() const {
@@ -419,4 +490,5 @@ bool CPUAnalyzer::getHasSMT() const {
 bool CPUAnalyzer::getHasPECores() const {
 	return cpu->hasPECores;
 }
+
 #endif //INTEL_CPU_APP_V2_ANALYZER_CPP

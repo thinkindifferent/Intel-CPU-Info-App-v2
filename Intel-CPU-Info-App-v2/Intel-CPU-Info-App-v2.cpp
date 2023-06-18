@@ -44,6 +44,8 @@ int main()
 	analyzedCPU.findHasSMT();
 	analyzedCPU.findCores();
 	analyzedCPU.findHasPECores();
+	analyzedCPU.findThreads();
+	analyzedCPU.findSuffixProperties();
 
 	cout << "CPU Suffix: " << analyzedCPU.getSuffix() << endl;
 	cout << "CPU Family: " << analyzedCPU.getFamily() << endl;
@@ -58,6 +60,8 @@ int main()
 	cout << "Has hyperthreading? " << analyzedCPU.getHasSMT() << endl;
 	cout << "CPU P/E Cores: " << analyzedCPU.getCores()[0] << " P Cores, " << analyzedCPU.getCores()[1] << " E Cores" << endl;
 	cout << "Has P/E Cores? " << analyzedCPU.getHasPECores() << endl;
+	cout << "CPU Threads: " << analyzedCPU.getThreads() << endl;
+	cout << "Other Properties: " << analyzedCPU.getSuffixProperties() << endl;
 
 	return 0;
 }

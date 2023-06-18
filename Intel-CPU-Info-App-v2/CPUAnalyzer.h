@@ -34,6 +34,7 @@ private:
 	bool numIsFound;
 	bool genIsFound;
 	bool familyIsFound;
+	bool smtIsFound;
 public:
 
 	/*
@@ -46,11 +47,10 @@ public:
 	*/
 	CPUAnalyzer(string name);
 
-	
+	/*
+		Combines all find() methods to extract information in one call
+	*/
 	void extractInfo(CPUInfo cpu);
-
-	// Finds CPU Name (e.g. "i7-6700K")
-	//void findName();
 
 	/*
 		Finds any applicable suffixes (e.g. "KS" for unlocked special edition)
@@ -82,6 +82,11 @@ public:
 		produced by findFamily()
 	*/
 	void findTier();
+
+	/*
+		Determines the special properties that a CPU's suffix would have
+	*/
+	void findSuffixProperties();
 
 	/*
 		Extracts the numeric values inside the CPU name, relies on the result
@@ -125,11 +130,6 @@ public:
 	void findHasPECores();
 
 	/*
-		Determines the special properties that a CPU's suffix would have
-	*/
-	void findSuffixProperties();
-
-	/*
 		Prints the results of the analysis
 	*/
 	void printResults();
@@ -151,6 +151,9 @@ public:
 
 	// Accessor for the CPU's performance tier
 	string getTier() const;
+
+	// Accessor for CPU suffix properties
+	string getSuffixProperties() const;
 
 	// Accessor for the CPU number
 	int getNumber() const;
@@ -176,7 +179,5 @@ public:
 	// Accessor for whether there are P and E cores
 	bool getHasPECores() const;
 
-	// Accessor for CPU suffix properties
-	string getSuffixProperties() const;
 };
 #endif //INTEL_CPU_APP_V2_ANALYZER_H

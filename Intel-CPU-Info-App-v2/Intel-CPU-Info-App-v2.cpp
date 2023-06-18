@@ -31,39 +31,8 @@ int main()
 		TESTING AREA! ONLY FOR DIAGNOSING INDIVIDUAL FUNCTIONS
 	*/
 	CPUAnalyzer analyzedCPU(nonAnalyzedCPU.getCPUName());
-	//analyzedCPU.findSuffix();
-	//analyzedCPU.findFamily();
-	//analyzedCPU.findTier();
-	//analyzedCPU.findNumber();
-	//analyzedCPU.findGeneration();
-	//analyzedCPU.findLithogrpahy();
-	//analyzedCPU.findMemSupport();
-	//analyzedCPU.findArch();
-	//analyzedCPU.findSocket();
-	//analyzedCPU.findHasIGPU();
-	//analyzedCPU.findHasSMT();
-	//analyzedCPU.findHasPECores();
-	//analyzedCPU.findCores();
-	//analyzedCPU.findThreads();
-	//analyzedCPU.findSuffixProperties();
-	analyzedCPU.extractInfo();
 
-	//cout << "CPU Suffix: " << analyzedCPU.getSuffix() << endl;
-	//cout << "CPU Family: " << analyzedCPU.getFamily() << endl;
-	//cout << "CPU Tier: " << analyzedCPU.getTier() << endl;
-	//cout << "CPU Number: " << analyzedCPU.getNumber() << endl;
-	//cout << "CPU Generation: " << analyzedCPU.getGeneration() << endl;
-	//cout << "CPU Lithography: " << analyzedCPU.getLithography() << "nm" << endl;
-	//cout << "CPU Supported Memory: " << analyzedCPU.getMemSupport() << endl;
-	//cout << "CPU Architecture: " << analyzedCPU.getArch() << endl;
-	//cout << "CPU Socket: " << analyzedCPU.getSocket() << endl;
-	//cout << "Has iGPU? " << analyzedCPU.getHasIGPU() << endl;
-	//cout << "Has hyperthreading? " << analyzedCPU.getHasSMT() << endl;
-	//cout << "CPU P/E Cores: " << analyzedCPU.getCores()[0] << " P Cores, " << analyzedCPU.getCores()[1] << " E Cores" << endl;
-	//cout << "Has P/E Cores? " << analyzedCPU.getHasPECores() << endl;
-	//cout << "CPU Threads: " << analyzedCPU.getThreads() << endl;
-	//cout << "Has Turbo Boost? " << analyzedCPU.getHasTurbo() << endl;
-	//cout << "Other Properties: " << analyzedCPU.getSuffixProperties() << endl;
+	analyzedCPU.extractInfo();
 	analyzedCPU.printResults();
 
 	return 0;

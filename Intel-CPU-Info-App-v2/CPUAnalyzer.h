@@ -30,12 +30,13 @@ private:
 	};
 
 	CPUInfo* cpu = new CPUInfo;
-	short suffixSize;
-	bool suffixIsFound;
-	bool numIsFound;
-	bool genIsFound;
-	bool familyIsFound;
-	bool smtIsFound;
+	short suffixSize = 0;
+	bool suffixIsFound = false;
+	bool numIsFound = false;
+	bool genIsFound = false;
+	bool familyIsFound = false;
+	bool smtIsFound = false;
+	bool coresAreFound = false;
 
 	// Helper to write suffixes for numbers, e.g. 3rd, 5th, etc.
 	string writeNumericSuffix(int num);

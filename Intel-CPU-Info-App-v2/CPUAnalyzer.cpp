@@ -31,6 +31,10 @@ void CPUAnalyzer::extractInfo() {
 }
 
 void CPUAnalyzer::printResults() {
+	// Printed titles are 40 chars wide
+	// FYI: The information is not in any specific order, just grouped
+	// to common sections
+
 	cout << "==========Basic CPU Information=========" << endl;
 	cout << "CPU Name: " << cpu->name << endl;
 	cout << "CPU Number: " << cpu->number << endl;
@@ -57,9 +61,12 @@ void CPUAnalyzer::printResults() {
 void CPUAnalyzer::findSuffix() {
 	char lastChar, secLastChar;
 	bool lastCharIsDig, secLastCharIsDig;
+
+	// Keep track of the last two chars in the CPU name
 	lastChar = cpu->name.back();
 	secLastChar = cpu->name[cpu->name.length() - 2];
 
+	// See if the last chars are either numerical digits or letters
 	lastCharIsDig = isdigit(lastChar);
 	secLastCharIsDig = isdigit(secLastChar);
 
@@ -86,80 +93,94 @@ void CPUAnalyzer::findSuffix() {
 }
 
 void CPUAnalyzer::findFamily() {
+	// Since it is assumed the CPU name starts with "i3", etc., the CPU
+	// family will just be the first couple of characters
 	cpu->family = cpu->name.substr(0, 2);
 	familyIsFound = true;
 }
 
 void CPUAnalyzer::findMemSupport() {
+	// Check if generation is found or not, needed for analysis
 	if (!genIsFound) {
 		findGeneration();
 	}
 
 	int gen = cpu->generation;
 	if (gen < 6) {
+		// Everything pre-6th gen only supports DDR3
 		cpu->memSupport = "DDR3";
 	}
 	else if ((gen >= 6) && (gen <= 11)) {
+		// Most generations from 2015 to 2021 support DDR4 only
 		cpu->memSupport = "DDR4";
 	}
 	else {
+		// Everything else supports both DDR4 and DDR5
 		cpu->memSupport = "DDR4/DDR5";
 	}
 }
 
 void CPUAnalyzer::findArch() {
+	// Generation is needed for analysis
 	if (!genIsFound) {
 		findGeneration();
 	}
 
+	// Switch cases for different generations and their respective
+	// architectural names
 	switch (cpu->generation) {
 	case 2:
-		cpu->arch = "Sandy Bridge";
+		cpu->arch = "Sandy Bridge (2011)";
 		break;
 	case 3:
-		cpu->arch = "Ivy Bridge";
+		cpu->arch = "Ivy Bridge (2012)";
 		break;
 	case 4:
-		cpu->arch = "Haswell/Devil's Canyon";
+		// Just for simplicity's sake it counts Haswell Refresh CPUs (e.g.
+		// i7-4790K) in the same architecture name
+		cpu->arch = "Haswell/Devil's Canyon (2013/14)";
 		break;
 	case 5:
-		cpu->arch = "Broadwell";
+		cpu->arch = "Broadwell (2015)";
 		break;
 	case 6:
-		cpu->arch = "Skylake";
+		cpu->arch = "Skylake (2015)";
 		break;
 	case 7:
-		cpu->arch = "Kaby Lake";
+		cpu->arch = "Kaby Lake (2017)";
 		break;
 	case 8:
-		cpu->arch = "Coffee Lake";
+		cpu->arch = "Coffee Lake (2017)";
 		break;
 	case 9:
-		cpu->arch = "Coffee Lake Refresh";
+		cpu->arch = "Coffee Lake Refresh (2018)";
 		break;
 	case 10:
-		cpu->arch = "Comet Lake";
+		cpu->arch = "Comet Lake (2020)";
 		break;
 	case 11:
-		cpu->arch = "Rocket Lake";
+		cpu->arch = "Rocket Lake (2021)";
 		break;
 	case 12:
-		cpu->arch = "Alder Lake";
+		cpu->arch = "Alder Lake (2021)";
 		break;
 	case 13:
-		cpu->arch = "Raptor Lake";
+		cpu->arch = "Raptor Lake (2022)";
 		break;
 	default:
+		// No case should reach this, but just to be sure though
 		cpu->arch = "N/A";
 		break;
 	}
 }
 
 void CPUAnalyzer::findSocket() {
+	// Generation is needed for analysis
 	if (!genIsFound) {
 		findGeneration();
 	}
 
+	// If-else to narrow down the socket based on generation
 	if (cpu->generation < 4) {
 		cpu->socket = "LGA1155";
 	}
@@ -178,7 +199,11 @@ void CPUAnalyzer::findSocket() {
 }
 
 void CPUAnalyzer::findTier() {
-	findFamily(); // To ensure that the family field is filled in
+	// Need the CPU's family to analyze
+	if (!familyIsFound) {
+		findFamily();
+	}
+
 	int perfLevel = int(cpu->family.at(1)) - 48; // Correct the conversion
 	switch (perfLevel) {
 		case 3:
@@ -194,6 +219,7 @@ void CPUAnalyzer::findTier() {
 			cpu->tier = "Enthusiast";
 			break;
 		default:
+			// Shouldn't reach this case, but just to be safe
 			cpu->tier = "N/A";
 			break;
 	}
@@ -201,19 +227,22 @@ void CPUAnalyzer::findTier() {
 }
 
 void CPUAnalyzer::findSuffixProperties() {
+	// We need the CPU's suffix after all...
 	if (!suffixIsFound) {
 		findSuffix();
 	}
-
 	string prop;
+
+	// No suffix means no additional properties
 	if (suffixSize == 0) {
 		prop = "N/A";
 	}
 
+	// For loop will run for only however long the suffix is,
+	// continually adds properties to the return string labeled prop
 	for (int i = 0; i < suffixSize; i++) {
-		char temp = cpu->suffix.at(i);
 
-		switch (temp) {
+		switch (cpu->suffix.at(i)) {
 		case 'C':
 			prop += "LGA1150 High Performance iGPU";
 			break;
@@ -240,6 +269,7 @@ void CPUAnalyzer::findSuffixProperties() {
 			break;
 		}
 
+		// Add a comma after the first property for two character suffixes
 		if ((suffixSize == 2) && (i == 0)) {
 			prop += ", ";
 		}
@@ -256,12 +286,15 @@ void CPUAnalyzer::findNumber() {
 	// Length of the CPU number, based on suffix size (0, 1, or 2), minus 3
 	// to deal with "i3", "i5", etc.
 	int numLength = cpu->name.length() - suffixSize - 3;
+
+	// Substring of only the numerical chars inside the name
 	string numStr = cpu->name.substr(3, numLength);
 	cpu->number = stoi(numStr);
 	numIsFound = true;
 }
 
 void CPUAnalyzer::findGeneration() {
+	// We need the CPU number to get its generation
 	if (!numIsFound) {
 		findNumber();
 	}
@@ -272,10 +305,11 @@ void CPUAnalyzer::findGeneration() {
 }
 
 void CPUAnalyzer::findLithogrpahy() {
+	// We need generation to analyze for the CPU's lithography process
 	if (!genIsFound) {
 		findGeneration();
 	}
-	
+	// Temp var
 	int gen = cpu->generation;
 	if (gen == 2) {
 		cpu->lithography = 32;
@@ -299,20 +333,25 @@ void CPUAnalyzer::findCores() {
 
 	// The cpu->cores member would be an array of 2, P cores in index 0
 	// and E cores in index 1
+	// All CPU's pre-12th gen have zero E cores
 	if (cpu->generation < 12) {
 		cpu->cores[1] = 0;
 	}
 
+	// i5's and i7's before 8th gen all had 4 cores
 	if (cpu->generation < 8) {
 		if ((cpu->family == "i7") || (cpu->family == "i5")) {
 			cpu->cores[0] = 4;
 		}
+		// All i3's had 2 cores
 		else if (cpu->family == "i3") {
 			cpu->cores[0] = 2;
 		}
 		return;
 	}
 	
+	// Every next generation had different core counts, the switch statement
+	// would account for each of those core count changes
 	switch (cpu->generation) {
 		case 8:
 			if ((cpu->family == "i7") || (cpu->family == "i5")) {
@@ -402,58 +441,56 @@ void CPUAnalyzer::findCores() {
 			}
 			break;
 	}
-	
+	coresAreFound = true;
 }
 
 void CPUAnalyzer::findThreads() {
-	if (!smtIsFound) {
+	// Need to know if SMT and core count are both found
+	if (!smtIsFound && !coresAreFound) {
 		findHasSMT();
+		findCores();
 	}
-
+	
+	// Hyperthreading means 2 times the P core count
 	if (cpu->hasSMT) {
 		cpu->threads = (2 * cpu->cores[0]) + cpu->cores[1];
 	}
 	else {
+		// If no hyperthreading, just add the core counts together
 		cpu->threads = cpu->cores[0] + cpu->cores[1];
 	}
 }
 
 void CPUAnalyzer::findHasIGPU() {
+	// Need to know if the suffix contains an F or P (i.e. no iGPU)
 	if (!suffixIsFound) {
 		findSuffix();
 	}
-
 	int suffixLength = cpu->suffix.length();
-	if (suffixLength == 2) {
-		if ((cpu->suffix.at(1) == 'F') || (cpu->suffix.at(1) == 'P')) {
-			cpu->hasIGPU = false;
-		}
-		else {
-			cpu->hasIGPU = true;
-		}
-	}
-	else if (suffixLength == 1) {
-		if ((cpu->suffix.at(0) == 'F') || (cpu->suffix.at(0) == 'P')) {
-			cpu->hasIGPU = false;
-		}
-		else {
-			cpu->hasIGPU = true;
-		}
-	}
 
-	// TODO: K CPU's don't seem to be caught in this else case
-	// Fixed above***
+	// For the 2 char long suffix case
+	if (suffixLength == 2) {
+		cpu->hasIGPU = !((cpu->suffix.at(1) == 'F') || (cpu->suffix.at(1) == 'P'));
+	}
+	// For the 1 char long suffix case
+	else if (suffixLength == 1) {
+		cpu->hasIGPU = !((cpu->suffix.at(0) == 'F') || (cpu->suffix.at(0) == 'P'));
+	}
 	else {
+		// Everything else has an iGPU
 		cpu->hasIGPU = true;
 	}
 }
 
 void CPUAnalyzer::findHasSMT() {
+	// Need both generation and family to analyze
 	if (!genIsFound || !familyIsFound) {
 		findGeneration();
 		findFamily();
 	}
 
+	// Case by case basis for finding hyperthreading, since it
+	// changes a lot for several generations or families
 	if ((cpu->family == "i9") || (cpu->family == "i3")) {
 		cpu->hasSMT = true;
 	}
@@ -471,15 +508,18 @@ void CPUAnalyzer::findHasSMT() {
 }
 
 void CPUAnalyzer::findHasPECores() {
+	// Only 12th gen and newer have both P and E cores
 	cpu->hasPECores = (cpu->generation >= 12);
 }
 
 void CPUAnalyzer::findHasTurbo() {
+	// Need generation and family for analysis
 	if (!genIsFound || !familyIsFound) {
 		findGeneration();
 		findFamily();
 	}
 
+	// If the CPU is not a pre-9th gen i3, it has turbo boost
 	cpu->hasTurbo = !((cpu->family == "i3") && (cpu->generation < 9));
 }
 
@@ -548,11 +588,12 @@ bool CPUAnalyzer::getHasTurbo() const {
 }
 
 string CPUAnalyzer::writeNumericSuffix(int num) {
-	// Since all generations are under 20, numbers' suffixes would
+	// Since all generations are numerically under 20, numbers' suffixes would
 	// mostly be "th", only 1st, 2nd, and 3rd will have different suffixes
 	string ret;
 	switch (num) {
 		case 1:
+			// None should reach this case, but good to be safe
 			ret = "st";
 			break;
 		case 2:
@@ -569,6 +610,7 @@ string CPUAnalyzer::writeNumericSuffix(int num) {
 }
 
 string CPUAnalyzer::boolToStr(bool in) {
+	// Could use a ternary operator instead, but who uses those anymore
 	if (in) {
 		return "Yes";
 	}

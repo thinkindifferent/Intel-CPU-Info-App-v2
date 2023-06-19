@@ -58,6 +58,30 @@ void CPUAnalyzer::printResults() {
 	cout << "Special Properties: " << cpu->suffixProp << endl;
 }
 
+void CPUAnalyzer::outputResults(fstream& fout) {
+	fout << "==========Basic CPU Information=========" << endl;
+	fout << "CPU Name: " << cpu->name << endl;
+	fout << "CPU Number: " << cpu->number << endl;
+	fout << "CPU Family: Core " << cpu->family << endl;
+	fout << "Architecture: " << cpu->arch << endl;
+	fout << "Lithography: " << cpu->lithography << "nm" << endl;
+	fout << "Tier: " << cpu->tier << endl;
+	fout << "Generation: " << cpu->generation << writeNumericSuffix(cpu->generation) << endl << endl;
+
+	fout << "===========CPU Specifications===========" << endl;
+	fout << "Total Cores: " << (cpu->cores[0] + cpu->cores[1]) << endl;
+	fout << "Has P/E Cores? " << boolToStr(cpu->hasPECores) << endl;
+	fout << "Core Makeup: " << (cpu->cores[0]) << " P Cores, " << (cpu->cores[1]) << " E Cores" << endl;
+	fout << "Total Threads: " << cpu->threads << endl;
+	fout << "Has Hyperthreading? " << boolToStr(cpu->hasSMT) << endl;
+	fout << "Has iGPU? " << boolToStr(cpu->hasIGPU) << endl << endl;
+
+	fout << "=======Supporting CPU Information=======" << endl;
+	fout << "Socket Supported: " << cpu->socket << endl;
+	fout << "Memory Supported: " << cpu->memSupport << endl;
+	fout << "Special Properties: " << cpu->suffixProp << endl << endl;
+}
+
 void CPUAnalyzer::findSuffix() {
 	char lastChar, secLastChar;
 	bool lastCharIsDig, secLastCharIsDig;

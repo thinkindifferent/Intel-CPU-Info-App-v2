@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <string>
-
+#include <fstream>
 
 using namespace std;
 
@@ -146,6 +146,11 @@ public:
 		Prints the results of the analysis
 	*/
 	void printResults();
+
+	/*
+		Outputs the same text as in printResults() into a given fstream
+	*/
+	void outputResults(fstream& fout);
 
 	// Accessor for the CPU suffix
 	string getSuffix() const;
